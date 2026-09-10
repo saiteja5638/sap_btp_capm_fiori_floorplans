@@ -1,0 +1,232 @@
+{
+  "_version": "1.89.0",
+  "sap.app": {
+    "id": "project1",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:ovp",
+      "version": "1.32.0",
+      "toolsId": "8d4b7b06-e9aa-4260-8582-1d28ff2cc414"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v2/catalog/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.152.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.templates": {},
+        "sap.ovp": {},
+        "sap.ui.rta": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "project1.i18n.i18n"
+        }
+      },
+      "mainModel": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "resources": {
+      "css": []
+    },
+    "routing": {
+      "config": {},
+      "routes": [],
+      "targets": {}
+    }
+  },
+  "sap.ovp": {
+    "globalFilterModel": "mainModel",
+    "globalFilterEntitySet": "Employees",
+    "containerLayout": "resizable",
+    "enableLiveFilter": true,
+    "considerAnalyticalParameters": false,
+    "cards": {
+      "employeeListCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.list",
+        "settings": {
+          "title": "{{employeeListCard_title}}",
+          "subTitle": "{{employeeListCard_subtitle}}",
+          "entitySet": "Employees",
+          "listType": "condensed",
+          "listFlavor": "standard",
+          "sortBy": "name",
+          "sortOrder": "ascending",
+          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem"
+        }
+      },
+      "leaveRequestsTableCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.table",
+        "settings": {
+          "title": "{{leaveRequestsTableCard_title}}",
+          "subTitle": "{{leaveRequestsTableCard_subtitle}}",
+          "entitySet": "LeaveRequests",
+          "sortBy": "fromDate",
+          "sortOrder": "descending",
+          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem"
+        }
+      },
+      "departmentsStackCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.stack",
+        "settings": {
+          "title": "{{departmentsStackCard_title}}",
+          "subTitle": "{{departmentsStackCard_subtitle}}",
+          "entitySet": "Departments",
+          "listType": "extended",
+          "annotationPath": "com.sap.vocabularies.UI.v1.LineItem",
+          "sortBy": "name",
+          "sortOrder": "ascending"
+        }
+      },
+      "employeesByStatusChartCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{employeesByStatusChartCard_title}}",
+          "subTitle": "{{employeesByStatusChartCard_subtitle}}",
+          "entitySet": "EmployeesByStatus",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant",
+          "selectionAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionVariant"
+        }
+      },
+      "quickLinksCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.linklist",
+        "settings": {
+          "title": "{{quickLinksCard_title}}",
+          "listFlavor": "standard",
+          "staticContent": [
+            {
+              "title": "{{quickLinksCard_link1_title}}",
+              "subTitle": "{{quickLinksCard_link1_subtitle}}",
+              "icon": "sap-icon://leave-request"
+            },
+            {
+              "title": "{{quickLinksCard_link2_title}}",
+              "subTitle": "{{quickLinksCard_link2_subtitle}}",
+              "icon": "sap-icon://org-chart"
+            }
+          ]
+        }
+      },
+      "employeesByDepartmentChartCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{employeesByDepartmentChartCard_title}}",
+          "entitySet": "EmployeesByDepartment",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant"
+        }
+      },
+      "leaveRequestsByMonthChartCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{leaveRequestsByMonthChartCard_title}}",
+          "entitySet": "LeaveRequestsByMonth",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant"
+        }
+      },
+      "departmentAttritionChartCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{departmentAttritionChartCard_title}}",
+          "entitySet": "DepartmentAttrition",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant"
+        }
+      },
+      "employeeSalaryTenureChartCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{employeeSalaryTenureChartCard_title}}",
+          "entitySet": "EmployeeSalaryTenure",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant"
+        }
+      },
+      "leaveTypeByDepartmentChartCard": {
+        "model": "mainModel",
+        "template": "sap.ovp.cards.charts.analytical",
+        "settings": {
+          "title": "{{leaveTypeByDepartmentChartCard_title}}",
+          "entitySet": "LeaveTypeByDepartment",
+          "chartAnnotationPath": "com.sap.vocabularies.UI.v1.Chart",
+          "presentationAnnotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant"
+        }
+      }
+    },
+    "globalFilterControlType": "MacroFilterBar"
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "analytical"
+  },
+  "sap.fe": {
+    "app": {
+      "enableLazyLoading": true
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "sample2",
+  "version": "1.0.0",
+  "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.16.1",
+    "@cap-js/hana": "^2",
+    "@sap/cds": "^9",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2.4",
+    "@sap/cds-dk": "^9",
+    "cds-plugin-ui5": "^0.17.0",
+    "mbt": "^1.2.49",
+    "rimraf": "^5.0.5"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-employees_overview": "cds watch --open employeesoverview/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-employee_overview": "cds watch --open employeeoverview/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "undeploy": "cf undeploy sample2 --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-employee_listreport": "cds watch --open employeelistreport/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-employee_overviewpage": "cds watch --open employeeoverviewpage/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-project1": "cds watch --open project1/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "private": true,
+  "workspaces": [
+    "app/*"
+  ],
+  "sapux": [
+    "app/employees_overview",
+    "app/employee_overview",
+    "app/employee_listreport",
+    "app/employee_overviewpage",
+    "app/employee_overview",
+    "app/project1"
+  ]
+}

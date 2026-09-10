@@ -1,0 +1,121 @@
+# POST http://localhost:4004/odata/v4/catalog/Salesorder
+# Content-Type: application/json
+
+   
+# {
+#     "CUSTOMER":"Admin1",
+#     "PRODUCT":"IPHONE15",
+#     "LOCATION":"HYD",
+#     "Quantity":"50"
+# }
+
+
+# POST  http://localhost:4004/odata/v4/catalog/Empl
+# Content-Type: application/json
+
+# {
+#     "name":"Spark",
+#     "email":"abc@gmail.com",
+#     "street":"Hyderabad",
+#     "city":"Kothepet",
+#     "zip":500038
+# }
+
+
+### Promote employee with ID 1
+# POST http://localhost:4004/odata/v4/catalog/Employee(2)/promote
+# Content-Type: application/json
+
+# {
+#     "salaryIncrease": 100000.00
+# }
+
+
+# POST  http://localhost:4004/odata/v4/catalog/Candidates
+# Content-Type: application/json
+
+# {
+#    "CID":"C1000",
+#    "CNAME":"Sample 125",
+#    "CEMAIL":"abc@gmail.com",
+#    "CNUMBER":"1020305689"
+# }
+
+POST  http://localhost:4004/odata/v4/catalog/SalesOrderBatch
+Content-Type: application/json
+
+{
+   "SalesOrders":[
+  {
+    "CUSTOMER": "John Smith",
+    "PRODUCT": "Laptop",
+    "LOCATION": "Hyderabad",
+    "Quantity": "2",
+    "PRICE": "75000"
+  },
+  {
+    "CUSTOMER": "Priya Sharma",
+    "PRODUCT": "Smartphone",
+    "LOCATION": "Bangalore",
+    "Quantity": "1",
+    "PRICE": "45000"
+  },
+  {
+    "CUSTOMER": "Michael Brown",
+    "PRODUCT": "Monitor",
+    "LOCATION": "Mumbai",
+    "Quantity": "3",
+    "PRICE": "18000"
+  },
+  {
+    "CUSTOMER": "Ananya Reddy",
+    "PRODUCT": "Keyboard",
+    "LOCATION": "Chennai",
+    "Quantity": "5",
+    "PRICE": "2500"
+  },
+  {
+    "CUSTOMER": "David Wilson",
+    "PRODUCT": "Headphones",
+    "LOCATION": "Delhi",
+    "Quantity": "2",
+    "PRICE": "5000"
+  },
+  {
+    "CUSTOMER": "Rahul Kumar",
+    "PRODUCT": "Tablet",
+    "LOCATION": "Pune",
+    "Quantity": "1",
+    "PRICE": "32000"
+  },
+  {
+    "CUSTOMER": "Sarah Johnson",
+    "PRODUCT": "Webcam",
+    "LOCATION": "Kolkata",
+    "Quantity": "4",
+    "PRICE": "4500"
+  },
+  {
+    "CUSTOMER": "Arjun Mehta",
+    "PRODUCT": "Mouse",
+    "LOCATION": "Ahmedabad",
+    "Quantity": "10",
+    "PRICE": "1200"
+  },
+  {
+    "CUSTOMER": "Neha Patel",
+    "PRODUCT": "Printer",
+    "LOCATION": "Jaipur",
+    "Quantity": "2",
+    "PRICE": "15000"
+  },
+  {
+    "CUSTOMER": "Chris Taylor",
+    "PRODUCT": "External SSD",
+    "LOCATION": "Hyderabad",
+    "Quantity": "3",
+    "PRICE": "8500"
+  }
+]
+
+}
