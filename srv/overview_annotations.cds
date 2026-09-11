@@ -55,6 +55,7 @@ annotate service.Departments with @(UI.LineItem: [
     Label: 'Department'
   }
 ]);
+
 annotate service.EmployeesByStatus with @(
   Analytics.query: true,
   UI.Chart: {

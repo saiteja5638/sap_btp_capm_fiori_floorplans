@@ -22,6 +22,19 @@ module.exports = srv => {
             return req.error(500, 'Failed to compute employee status counts');
         }
     });
+    srv.after('READ', 'WarehouseStock', (results) => {
+        const rows = Array.isArray(results) ? results : [results];
+        rows.forEach(row => {
+            if (!row) return;
+            if (row.quantity < row.reorderLevel * 0.5) {
+                row.stockCriticality = 1;   // Negative (red)
+            } else if (row.quantity < row.reorderLevel) {
+                row.stockCriticality = 2;   // Critical (orange)
+            } else {
+                row.stockCriticality = 3;   // Positive (green)
+            }
+        });
+    });
     srv.on(['CREATE'], 'Salesorder', async (req) => {
         try {
 
@@ -224,6 +237,37 @@ LEFT JOIN "MODEL_DEPARTMENTS" D
             return req.error(500, 'Failed to compute department attrition');
         }
     });
+
+    srv.on('getDataByParam',async(req)=>{
+        try {
+            let payload = req.data;
+
+            var getRecords;
+
+            if (payload.TableName = 'Employees') {
+
+                 getRecords = await cds.run(`select * from MODEL_EMPLOYEES1 limit ${payload.Limit};`)
+                
+            }
+            if (payload.TableName = 'Leaves') {
+
+                 getRecords = await cds.run(`select * from MODEL_LEAVEREQUESTS limit ${payload.Limit};`)
+                
+            }
+            if (payload.TableName = 'Products') {
+
+                 getRecords = await cds.run(`select * from MODEL_PRODUCT limit ${payload.Limit};`)
+                
+            }
+
+            return {
+                Records : getRecords
+            }
+
+        } catch (error) {
+            console.log(error.message)
+        }
+    })
 
     srv.on('READ', 'EmployeeSalaryTenure', async (req) => {
         try {

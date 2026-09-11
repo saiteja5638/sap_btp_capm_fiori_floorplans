@@ -15,12 +15,19 @@ context model {
     }
 
 
-    entity Products {
-        key ProductId   : String;
-            ProductName : String;
-            ProductType : String;
-            Prod_Price  : Integer;
+    entity Product : cuid, managed {
+        productName : String(100);
+        category    : String(50);
+        price       : Decimal(10, 2);
     }
+
+    entity WarehouseStock : cuid, managed {
+    product      : String(100);
+    location     : String(50);
+    quantity     : Integer;
+    reorderLevel : Integer default 10;
+    virtual stockCriticality : Integer;
+}
 
     entity wareHouseMgmt {
         key WID       : String;

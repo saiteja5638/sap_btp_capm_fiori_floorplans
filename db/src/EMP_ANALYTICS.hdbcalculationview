@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:DataFoundation="http://www.sap.com/ndb/BiModelDataFoundation.ecore" xmlns:Dimension="http://www.sap.com/ndb/BiModelDimension.ecore" id="EMP_ANALYTICS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" application="BAS">
+<descriptions defaultDescription="EMP_ANALYTICS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="MODEL_EMPLOYEES">
+    <resourceUri>MODEL_EMPLOYEES</resourceUri>
+  </DataSource>
+  <DataSource id="MODEL_DEPARTMENTS">
+    <resourceUri>MODEL_DEPARTMENTS</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="EMPLOYEEID"/>
+      <viewAttribute id="EMP_NAME"/>
+      <viewAttribute id="SALARY" aggregationType="sum"/>
+      <viewAttribute id="JOBTITLE"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="DEPARTMENTID"/>
+      <viewAttribute id="NAME"/>
+      <viewAttribute hidden="true" id="JOIN$DEPARTMENT_ID$ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ACTIVE_EMP" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>CASE
+    WHEN &quot;STATUS&quot; = 'Active' THEN 1
+    ELSE 0
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="MODEL_EMPLOYEES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPLOYEEID" source="EMPLOYEEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_NAME" source="NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALARY" source="SALARY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOBTITLE" source="JOBTITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DEPARTMENT_ID$ID" source="DEPARTMENT_ID"/>
+    </input>
+    <input node="MODEL_DEPARTMENTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEPARTMENTID" source="DEPARTMENTID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NAME" source="NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DEPARTMENT_ID$ID" source="ID"/>
+    </input>
+    <joinAttribute name="JOIN$DEPARTMENT_ID$ID"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="EMPLOYEEID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMPLOYEEID"/>
+      <keyMapping columnObjectName="Join_1" columnName="EMPLOYEEID"/>
+    </attribute>
+    <attribute id="EMP_NAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMP_NAME"/>
+      <keyMapping columnObjectName="Join_1" columnName="EMP_NAME"/>
+    </attribute>
+    <attribute id="JOBTITLE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="JOBTITLE"/>
+      <keyMapping columnObjectName="Join_1" columnName="JOBTITLE"/>
+    </attribute>
+    <attribute id="STATUS" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STATUS"/>
+      <keyMapping columnObjectName="Join_1" columnName="STATUS"/>
+    </attribute>
+    <attribute id="DEPARTMENTID" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DEPARTMENTID"/>
+      <keyMapping columnObjectName="Join_1" columnName="DEPARTMENTID"/>
+    </attribute>
+    <attribute id="NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NAME"/>
+      <keyMapping columnObjectName="Join_1" columnName="NAME"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="SALARY" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SALARY"/>
+      <measureMapping columnObjectName="Join_1" columnName="SALARY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ACTIVE_EMP" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACTIVE_EMP"/>
+      <measureMapping columnObjectName="Join_1" columnName="ACTIVE_EMP"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="EMP_COUNT" order="1" aggregationType="sum" measureType="simple" calculatedMeasureType="counter" datatype="BIGINT">
+      <descriptions defaultDescription="EMP_COUNT"/>
+      <exceptionAggregation>
+        <attribute attributeName="EMPLOYEEID"/>
+      </exceptionAggregation>
+      <formula>1</formula>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions>
+    <localDimension id="EMP_ORG_HIERARCHY">
+      <attributeRef xsi:type="DataFoundation:Attribute">NAME</attributeRef>
+      <attributeRef xsi:type="DataFoundation:Attribute">JOBTITLE</attributeRef>
+      <attributeRef xsi:type="DataFoundation:Attribute">EMP_NAME</attributeRef>
+      <hierarchies>
+        <hierarchy xsi:type="Dimension:LeveledHierarchy" id="EMP_ORG_HIERARCHY" aggregateAllNodes="true" orphanedNodesHandling="ROOT_NODES" rootNodeVisibility="ADD_ROOT_NODE" withRootNode="true" nodeStyle="LEVEL_NAME_ENFORCED" cacheEnabled="true" cycleHandling="BREAKUP" emptyValueIsNull="true">
+          <descriptions defaultDescription="EMP_ORG_HIERARCHY"/>
+          <unassignedMemberProperties mode="FALSE"/>
+          <levels>
+            <level levelAttribute="NAME" levelType="MDLEVEL_TYPE_REGULAR" order="1" orderAttribute="NAME" sortDirection="ASC"/>
+            <level levelAttribute="JOBTITLE" levelType="MDLEVEL_TYPE_REGULAR" order="2" orderAttribute="JOBTITLE" sortDirection="ASC"/>
+            <level levelAttribute="EMP_NAME" levelType="MDLEVEL_TYPE_REGULAR" order="3" orderAttribute="EMP_NAME" sortDirection="ASC"/>
+          </levels>
+        </hierarchy>
+      </hierarchies>
+    </localDimension>
+  </localDimensions>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-253" y="239"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="MODEL_EMPLOYEES" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="197"/>
+    </shape>
+    <shape modelObjectName="MODEL_DEPARTMENTS" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="204"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="emp_cv" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" application="BAS">
+<descriptions defaultDescription="emp_cv"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="MODEL_EMPLOYEES">
+    <resourceUri>MODEL_EMPLOYEES</resourceUri>
+  </DataSource>
+  <DataSource id="MODEL_DEPARTMENTS">
+    <resourceUri>MODEL_DEPARTMENTS</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_1" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="EMPLOYEEID"/>
+      <viewAttribute id="EMP_NAME"/>
+      <viewAttribute id="EMAIL"/>
+      <viewAttribute id="SALARY" aggregationType="sum"/>
+      <viewAttribute id="JOBTITLE"/>
+      <viewAttribute id="STATUS"/>
+      <viewAttribute id="DEPT_NAME"/>
+      <viewAttribute id="DEPARTMENTID"/>
+      <viewAttribute id="DEPT_KEY"/>
+      <viewAttribute id="EMP_ID"/>
+      <viewAttribute hidden="true" id="JOIN$DEPARTMENT_ID$ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="MODEL_EMPLOYEES">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMPLOYEEID" source="EMPLOYEEID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_NAME" source="NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL" source="EMAIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALARY" source="SALARY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOBTITLE" source="JOBTITLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATUS" source="STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMP_ID" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DEPARTMENT_ID$ID" source="DEPARTMENT_ID"/>
+    </input>
+    <input node="MODEL_DEPARTMENTS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEPT_NAME" source="NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEPARTMENTID" source="DEPARTMENTID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEPT_KEY" source="ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$DEPARTMENT_ID$ID" source="ID"/>
+    </input>
+    <joinAttribute name="JOIN$DEPARTMENT_ID$ID"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="EMPLOYEEID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMPLOYEEID"/>
+      <keyMapping columnObjectName="Join_1" columnName="EMPLOYEEID"/>
+    </attribute>
+    <attribute id="EMP_NAME" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NAME"/>
+      <keyMapping columnObjectName="Join_1" columnName="EMP_NAME"/>
+    </attribute>
+    <attribute id="EMAIL" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMAIL"/>
+      <keyMapping columnObjectName="Join_1" columnName="EMAIL"/>
+    </attribute>
+    <attribute id="JOBTITLE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="JOBTITLE"/>
+      <keyMapping columnObjectName="Join_1" columnName="JOBTITLE"/>
+    </attribute>
+    <attribute id="STATUS" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STATUS"/>
+      <keyMapping columnObjectName="Join_1" columnName="STATUS"/>
+    </attribute>
+    <attribute id="DEPT_NAME" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NAME_1"/>
+      <keyMapping columnObjectName="Join_1" columnName="DEPT_NAME"/>
+    </attribute>
+    <attribute id="DEPARTMENTID" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DEPARTMENTID"/>
+      <keyMapping columnObjectName="Join_1" columnName="DEPARTMENTID"/>
+    </attribute>
+    <attribute id="DEPT_KEY" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ID"/>
+      <keyMapping columnObjectName="Join_1" columnName="DEPT_KEY"/>
+    </attribute>
+    <attribute id="EMP_ID" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ID"/>
+      <keyMapping columnObjectName="Join_1" columnName="EMP_ID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="SALARY" order="4" aggregationType="var" measureType="simple">
+      <descriptions defaultDescription="SALARY"/>
+      <measureMapping columnObjectName="Join_1" columnName="SALARY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="241"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="MODEL_EMPLOYEES" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="197"/>
+    </shape>
+    <shape modelObjectName="MODEL_DEPARTMENTS" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="204"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

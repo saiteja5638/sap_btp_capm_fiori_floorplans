@@ -36,6 +36,10 @@ service CatalogService {
     entity LeaveRequests   as projection on model.LeaveRequests;
 
 
+    entity Products        as projection on model.Product;
+    entity WarehouseStock  as projection on model.WarehouseStock;
+
+
     entity EmployeesByDepartment {
         key department            : String;
             virtual employeeCount : Integer;
@@ -78,6 +82,8 @@ service CatalogService {
     }
 
     action SalesOrderBatch(SalesOrders: array of SalesOrderType) returns Reponse;
+
+    function getDataByParam(TableName:String,Limit:Integer) returns String;
 
 
 }
