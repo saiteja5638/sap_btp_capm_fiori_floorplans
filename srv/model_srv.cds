@@ -26,8 +26,12 @@ service CatalogService {
 
     entity Candidates      as projection on model.Candidates;
 
-    @readonly
-    entity Employees       as projection on model.Employees;
+
+    entity Employees       as projection on model.Employees
+    actions {
+        action  promote(Salary:Decimal(10,2))  returns Employees
+    };
+
 
     @readonly
     entity Departments     as projection on model.Departments;
@@ -81,9 +85,14 @@ service CatalogService {
         Messsage : String;
     }
 
-    action SalesOrderBatch(SalesOrders: array of SalesOrderType) returns Reponse;
+    action   SalesOrderBatch(SalesOrders: array of SalesOrderType) returns Reponse;
 
-    function getDataByParam(TableName:String,Limit:Integer) returns String;
+    action   insertData(payload: String)                           returns Reponse;
+
+    function getDataByParam(TableName: String, Limit: Integer)     returns String;
+
+
+    function getSalarybyEmployee()                                 returns String;
 
 
 }
