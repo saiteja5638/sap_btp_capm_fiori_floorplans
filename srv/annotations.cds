@@ -6,7 +6,7 @@ annotate CatalogService.Employees1 with @(
     // =========================================================
     // 1. FILTER BAR
     // =========================================================
-    UI.SelectionFields: [
+    UI.SelectionFields                        : [
         name,
         department,
         employeeId,
@@ -17,7 +17,7 @@ annotate CatalogService.Employees1 with @(
     // =========================================================
     // 2. LIST REPORT TABLE
     // =========================================================
-    UI.LineItem: [
+    UI.LineItem                               : [
         {
             $Type: 'UI.DataField',
             Value: employeeId,
@@ -54,14 +54,14 @@ annotate CatalogService.Employees1 with @(
     // =========================================================
     // 3. OBJECT PAGE HEADER
     // =========================================================
-    UI.HeaderInfo: {
-        TypeName: 'Employee Overview',
+    UI.HeaderInfo                             : {
+        TypeName      : 'Employee Overview',
         TypeNamePlural: 'Employees',
-        Title: {
+        Title         : {
             $Type: 'UI.DataField',
             Value: name
         },
-        Description: {
+        Description   : {
             $Type: 'UI.DataField',
             Value: designation
         }
@@ -71,33 +71,33 @@ annotate CatalogService.Employees1 with @(
     // =========================================================
     // 4. OBJECT PAGE FACETS / SECTIONS
     // =========================================================
-    UI.Facets: [
+    UI.Facets                                 : [
 
         // Employee Information
         {
-            $Type: 'UI.ReferenceFacet',
-            Label: 'Employee Information',
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Employee Information',
             Target: '@UI.FieldGroup#EmployeeInfo'
         },
 
         // Project
         {
-            $Type: 'UI.ReferenceFacet',
-            Label: 'Project Details',
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Project Details',
             Target: 'project/@UI.FieldGroup#ProjectDetails'
         },
 
         // Skills table
         {
-            $Type: 'UI.ReferenceFacet',
-            Label: 'Skills',
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Skills',
             Target: 'skillset/@UI.LineItem'
         },
 
         // Work Experience table
         {
-            $Type: 'UI.ReferenceFacet',
-            Label: 'Work Experience',
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Work Experience',
             Target: 'wexp/@UI.LineItem'
         }
     ],
@@ -106,158 +106,145 @@ annotate CatalogService.Employees1 with @(
     // =========================================================
     // 5. EMPLOYEE INFORMATION FIELD GROUP
     // =========================================================
-    UI.FieldGroup #EmployeeInfo: {
-        Data: [
+    UI.FieldGroup #EmployeeInfo               : {Data: [
 
-            {
-                $Type: 'UI.DataField',
-                Label: 'Employee ID',
-                Value: employeeId
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Employee Name',
-                Value: name
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Email',
-                Value: email
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Department',
-                Value: department
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Designation',
-                Value: designation
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Salary',
-                Value: salary
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Status',
-                Value: status
-            }
-        ]
-    }
+        {
+            $Type: 'UI.DataField',
+            Label: 'Employee ID',
+            Value: employeeId
+        },
+        {
+            $Type: 'UI.DataField',
+            Label: 'Employee Name',
+            Value: name
+        },
+        {
+            $Type: 'UI.DataField',
+            Label: 'Email',
+            Value: email
+        },
+        {
+            $Type: 'UI.DataField',
+            Label: 'Department',
+            Value: department
+        },
+        {
+            $Type: 'UI.DataField',
+            Label: 'Designation',
+            Value: designation
+        },
+        {
+            $Type: 'UI.DataField',
+            Label: 'Salary',
+            Value: salary
+        },
+        {
+            $Type: 'UI.DataField',
+            Label: 'Status',
+            Value: status
+        }
+    ]}
 
 );
 
 
 annotate CatalogService.ProjectInfo with @(
 
-    // =========================================================
-    // 6. PROJECT DETAILS
-    // =========================================================
-    UI.FieldGroup #ProjectDetails: {
-        Data: [
+     UI.FieldGroup #ProjectDetails: {Data: [
 
-            {
-                $Type: 'UI.DataField',
-                Label: 'Project Title',
-                Value: PTitle
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Description',
-                Value: PDescription
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Project Type',
-                Value: PType
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Start Date',
-                Value: PStartedDate
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'End Date',
-                Value: PEndDate
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Team Size',
-                Value: TeamSize
-            }
-        ]
+    {
+        $Type: 'UI.DataField',
+        Label: 'Project Title',
+        Value: PTitle
+    },
+    {
+        $Type: 'UI.DataField',
+        Label: 'Description',
+        Value: PDescription
+    },
+    {
+        $Type: 'UI.DataField',
+        Label: 'Project Type',
+        Value: PType
+    },
+    {
+        $Type: 'UI.DataField',
+        Label: 'Start Date',
+        Value: PStartedDate
+    },
+    {
+        $Type: 'UI.DataField',
+        Label: 'End Date',
+        Value: PEndDate
+    },
+    {
+        $Type: 'UI.DataField',
+        Label: 'Team Size',
+        Value: TeamSize
     }
+]}
 
 );
 
 
 annotate CatalogService.SkillSet with @(
 
-    // =========================================================
-    // 7. SKILL SET TABLE
-    // =========================================================
     UI.LineItem: [
 
-        {
-            $Type: 'UI.DataField',
-            Value: STitle,
-            Label: 'Skill'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: Slevel,
-            Label: 'Level'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: SDescrip,
-            Label: 'Description'
-        }
-    ]
+    {
+        $Type: 'UI.DataField',
+        Value: STitle,
+        Label: 'Skill'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Slevel,
+        Label: 'Level'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: SDescrip,
+        Label: 'Description'
+    }
+]
 
 );
 
 
 annotate CatalogService.WorkExp with @(
 
-    // =========================================================
-    // 8. WORK EXPERIENCE TABLE
-    // =========================================================
-    UI.LineItem: [
+     UI.LineItem: [
 
-        {
-            $Type: 'UI.DataField',
-            Value: CompanyName,
-            Label: 'Company'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: CompanyType,
-            Label: 'Company Type'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: StartDate,
-            Label: 'Start Date'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: EndDate,
-            Label: 'End Date'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: Exp,
-            Label: 'Experience'
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: Status,
-            Label: 'Current'
-        }
-    ]
+    {
+        $Type: 'UI.DataField',
+        Value: CompanyName,
+        Label: 'Company'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: CompanyType,
+        Label: 'Company Type'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: StartDate,
+        Label: 'Start Date'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: EndDate,
+        Label: 'End Date'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Exp,
+        Label: 'Experience'
+    },
+    {
+        $Type: 'UI.DataField',
+        Value: Status,
+        Label: 'Current'
+    }
+]
 
 );

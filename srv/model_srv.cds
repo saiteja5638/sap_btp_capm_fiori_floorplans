@@ -8,6 +8,28 @@ service CatalogService {
             virtual employeeCount : Integer;
     }
 
+
+    entity Books           as projection on model.Books;
+    entity Customers       as projection on model.Customers;
+
+    entity PurchaseOrders  as
+        projection on model.PurchaseOrders {
+            PID as PurchaseOrderID,
+            Customer as CustomerName
+        };
+
+    entity Book            as projection on model.Book;
+    entity Authors         as projection on model.Authors;
+
+    entity ManagedUsers    as projection on model.ManagedUsers;
+    entity MCHILDS         as projection on model.MCHILDS;
+
+
+    // entity POPID_V         as projection on POPID;
+
+
+    entity Orders          as projection on model.Orders;
+    entity OrderItems      as projection on model.OrderItems;
     entity Users           as projection on model.Users;
 
     entity Salesorder      as projection on model.Salesorder;
@@ -16,6 +38,34 @@ service CatalogService {
     entity SalesOrders     as projection on model.SalesOrders;
     entity SalesOrderItems as projection on model.SalesOrderItems;
 
+    @restrict: [
+        {
+            grant: 'READ',
+            to   : 'READPROD'
+        },
+        {
+            grant: [
+                'READ',
+                'CREATE'
+            ],
+            to   : 'CREATEPROD'
+        },
+        {
+            grant: [
+                'READ',
+                'UPDATE'
+            ],
+            to   : 'UPDATEPROD'
+        },
+        {
+            grant: [
+                'READ',
+                'DELETE'
+            ],
+            to   : 'DELETEPROD'
+        }
+    ]
+    @odata.draft.enabled
     entity Employees1      as projection on model.Employees1;
     entity ProjectInfo     as projection on model.ProjectInfo;
     entity SkillSet        as projection on model.SkillSet;
@@ -28,9 +78,9 @@ service CatalogService {
 
 
     entity Employees       as projection on model.Employees
-    actions {
-        action  promote(Salary:Decimal(10,2))  returns Employees
-    };
+        actions {
+            action promote(Salary: Decimal(10, 2)) returns Employees
+        };
 
 
     @readonly
@@ -42,6 +92,11 @@ service CatalogService {
 
     entity Products        as projection on model.Product;
     entity WarehouseStock  as projection on model.WarehouseStock;
+
+    entity EMPLOYEES22     as projection on model.EMPLOYEES22;
+    // entity Managers        as projection on model.Managers;
+
+    entity EMPLOYEE as  select EMPID from model.EMPLOYEES22;
 
 
     entity EmployeesByDepartment {
@@ -93,6 +148,8 @@ service CatalogService {
 
 
     function getSalarybyEmployee()                                 returns String;
+
+    function getEntityData(entityName: String)                     returns array of {};
 
 
 }

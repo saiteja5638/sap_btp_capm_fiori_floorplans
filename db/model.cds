@@ -1,6 +1,7 @@
 using {
     cuid,
-    managed
+    managed,
+    User
 } from '@sap/cds/common';
 
 context model {
@@ -11,7 +12,19 @@ context model {
 
     entity Customers {
         key CustID   : String;
+        key PID      : UUID;
+        key KID      : UUID;
             CustName : String;
+
+            orders   : Association to many PurchaseOrders
+                           on orders.Customer = $self.KID;
+    }
+
+    entity PurchaseOrders {
+        key PID      : UUID;
+            PNUMBER  : Integer;
+            PRICE    : Double;
+            Customer : String;
     }
 
 
@@ -21,13 +34,76 @@ context model {
         price       : Decimal(10, 2);
     }
 
+
+    // assocaitions with un managed
+    entity Books {
+        key ID     : UUID;
+            title  : String;
+            author : Association to Authors;
+    }
+
+    entity Authors {
+        key ID    : UUID;
+            name  : String;
+            books : Association to many Books
+                        on books.author = $self;
+    }
+
+    // assocaitions with managed
+    entity ManagedUsers {
+        key MID   : UUID;
+            MNAME : String;
+            mc    : Association to many MCHILDS
+                        on mc.CID = $self.MID;
+
+    }
+
+    entity MCHILDS {
+        key MCID    : UUID;
+            CID     : String(36);
+            TITLE   : String(36);
+            DESCRIP : String(40);
+    }
+
+
+    entity Orders {
+        key ID    : UUID;
+            items : Composition of many OrderItems
+                        on items.order = $self;
+    }
+
+    entity OrderItems {
+        key ID       : UUID;
+            order    : Association to Orders;
+            product  : String;
+            quantity : Integer;
+    }
+
+
+    aspect cuid {
+        key ID : UUID;
+    }
+
+    aspect managed {
+        createdAt  : Timestamp  @cds.on.insert: $now;
+        createdBy  : User       @cds.on.insert: $user;
+        modifiedAt : Timestamp  @cds.on.insert: $now   @cds.on.update: $now;
+        modifiedBy : User       @cds.on.insert: $user  @cds.on.update: $user;
+    }
+
+    entity Book : cuid, managed {
+        title : String;
+        price : Decimal;
+    }
+
+
     entity WarehouseStock : cuid, managed {
-    product      : String(100);
-    location     : String(50);
-    quantity     : Integer;
-    reorderLevel : Integer default 10;
-    virtual stockCriticality : Integer;
-}
+        product                  : String(100);
+        location                 : String(50);
+        quantity                 : Integer;
+        reorderLevel             : Integer default 10;
+        virtual stockCriticality : Integer;
+    }
 
     entity wareHouseMgmt {
         key WID       : String;
@@ -222,4 +298,45 @@ context model {
     }
 
 
+    entity Managers {
+
+        key MID       : UUID;
+        key ID        : UUID;
+        key KID       : UUID;
+        key SID       : UUID;
+            MNAME     : String;
+
+            employees : Composition of many EMPLOYEES22
+                            on employees.MANAGER = $self.ID;
+
+
+    }
+
+    entity EMPLOYEES22 {
+
+        key EMPID   : UUID;
+            EMPNAME : String;
+
+            MANAGER : String;
+
+
+    }
+
+
 }
+
+
+// @cds.persistence.exists
+// @cds.persistence.table
+// entity MDMC {
+//     MNAME   : String;
+//     TITLE   : String;
+//     DESCRIP : String
+// }
+
+
+// @cds.persistence.table
+// entity PID_PNUM {
+//     key PID     : UUID;
+//         PNUMBER : Integer;
+// }
