@@ -14,7 +14,7 @@ service CatalogService {
 
     entity PurchaseOrders  as
         projection on model.PurchaseOrders {
-            PID as PurchaseOrderID,
+            PID      as PurchaseOrderID,
             Customer as CustomerName
         };
 
@@ -29,6 +29,8 @@ service CatalogService {
 
 
     entity Orders          as projection on model.Orders;
+
+    // entity JobLogs         as projection on model.JobLogs;
     entity OrderItems      as projection on model.OrderItems;
     entity Users           as projection on model.Users;
 
@@ -67,6 +69,7 @@ service CatalogService {
     ]
     @odata.draft.enabled
     entity Employees1      as projection on model.Employees1;
+
     entity ProjectInfo     as projection on model.ProjectInfo;
     entity SkillSet        as projection on model.SkillSet;
     entity WorkExp         as projection on model.WorkExp;
@@ -96,7 +99,7 @@ service CatalogService {
     entity EMPLOYEES22     as projection on model.EMPLOYEES22;
     // entity Managers        as projection on model.Managers;
 
-    entity EMPLOYEE as  select EMPID from model.EMPLOYEES22;
+    entity EMPLOYEE        as select EMPID from model.EMPLOYEES22;
 
 
     entity EmployeesByDepartment {
@@ -150,6 +153,8 @@ service CatalogService {
     function getSalarybyEmployee()                                 returns String;
 
     function getEntityData(entityName: String)                     returns array of {};
+
+    action   createPlanning();
 
 
 }
