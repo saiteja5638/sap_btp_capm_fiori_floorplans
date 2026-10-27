@@ -1,7 +1,99 @@
 var cds = require('@sap/cds');
-const { INSERT } = require('@sap/cds/lib/ql/cds-ql');
+const { INSERT, UPDATE } = require('@sap/cds/lib/ql/cds-ql');
+const axios = require('axios');
+
+const Ext = require('./license-service')
+
+const BASE_URL = 'https://services.odata.org/v4/Northwind/northwind.svc';
+
+// Optional: restrict to known entity sets to avoid arbitrary path injection
+const ALLOWED_ENTITIES = [
+    'Categories', 'CustomerDemographics', 'Customers', 'Employees',
+    'Order_Details', 'Orders', 'Products', 'Regions', 'Shippers',
+    'Suppliers', 'Territories'
+];
+
 
 module.exports = srv => {
+
+
+
+    srv.on("createPlanning", async (req) => {
+
+        // 1. Validate the license first
+        try {
+            await licenseService.validateLicense();
+        } catch (error) {
+            return req.reject(
+                error.status || 503,
+                "License validation failed"
+            );
+        }
+
+        // 2. Execute your existing planning logic
+        // Do not remove your existing implementation.
+
+    });
+
+
+
+    srv.before(['READ'], 'Employees1', async (req) => {
+        try {
+            console.log(req)
+        } catch (error) {
+            console.log(error.message)
+        }
+    })
+    srv.on('getEntityData', async (req) => {
+        const { entityName } = req.data;
+
+        if (!entityName) {
+            return req.error(400, 'entityName is required');
+        }
+
+        if (!ALLOWED_ENTITIES.includes(entityName)) {
+            return req.error(400, `Unknown entity: ${entityName}`);
+        }
+
+        try {
+            const response = await axios.get(`${BASE_URL}/${entityName}`, {
+                headers: { Accept: 'application/json' },
+                timeout: 10000
+            });
+
+            // Northwind OData v4 wraps results in { "@odata.context": ..., "value": [...] }
+            return response.data.value;
+
+        } catch (err) {
+            req.error(502, `Failed to fetch ${entityName} from Northwind: ${err.message}`);
+        }
+    });
+    srv.on('insertData', async (req) => {
+        try {
+
+
+
+            let payload = [
+                { "id": 1, "name": "Alice", "age": 28, "city": "Hyderabad" },
+                { "id": 2, "name": "Bob", "age": 34, "city": "Bangalore" },
+                { "id": 3, "name": "Charlie", "age": 25, "city": "Mumbai" },
+                { "id": 4, "name": "Diana", "age": 31, "city": "Delhi" },
+                { "id": 5, "name": "Ethan", "age": 27, "city": "Chennai" }
+            ]
+
+            let String = JSON.stringify(payload)
+
+            return {
+                Messsage: JSON.parse(String)
+            }
+
+
+
+
+        } catch (error) {
+            console.log(error.message)
+        }
+    })
     srv.on('READ', 'EmployeesByStatus', async (req) => {
         try {
             const employees = await cds.run('SELECT  "STATUS" as status FROM MODEL_EMPLOYEES');
@@ -35,6 +127,38 @@ module.exports = srv => {
             }
         });
     });
+    srv.on('promote', 'Employees', async (req) => {
+        try {
+            let Salary = req.data.Salary;
+            let EmpId = req.params[0].ID;
+
+            let EmpExists = await cds.run(`SELECT * FROM MODEL_EMPLOYEES where EMPLOYEEID ='${EmpId}'`)
+
+            if (EmpExists.length > 0) {
+
+                let EmppromtedSalary = Number(EmpExists[0].SALARY) + Salary;
+                await UPDATE("MODEL_EMPLOYEES").set({
+                    salary: EmppromtedSalary,
+                    status: 'Promoted'
+                }).where({
+                    EMPLOYEEID: EmpId
+                })
+                let EmpUpdateSalary = await cds.run(`SELECT * FROM MODEL_EMPLOYEES where EMPLOYEEID ='${EmpId}'`)
+
+                return EmpUpdateSalary
+
+            }
+            else {
+                req.reject({
+                    StatusCode: 400,
+                    StatusMessage: 'Employeee Does Not Exits'
+                })
+            }
+
+        } catch (error) {
+            console.log(error.message)
+        }
+    })
     srv.on(['CREATE'], 'Salesorder', async (req) => {
         try {
 
@@ -75,32 +199,30 @@ module.exports = srv => {
         }
 
     })
-    srv.on('promote', 'Employee', async (req) => {
-        let { salaryIncrease } = req.data;
-        let employeeId = req.params[0].ID;
+    srv.on('getSalarybyEmployee', async (req) => {
         try {
 
-            const employee = await SELECT.one
-                .from('MODEL_EMPLOYEE')
-                .where({ ID: employeeId });
+            let getRecords = await cds.run(`SELECT
+	"NAME",
+	"SALARY",
+	"JOBTITLE"
+FROM MODEL_EMPLOYEES`)
 
-            if (!employee) {
-                return req.error(404, 'Employee not found');
+            if (getRecords.length > 0) {
+
+                return {
+                    StatusCode: 200,
+                    Response: getRecords
+                }
+
+
             }
-
-            const newSalary = Number(employee.SALARY) + Number(salaryIncrease);
-
-            await UPDATE('MODEL_EMPLOYEE')
-                .set({
-                    salary: newSalary,
-                    status: 'PROMOTED'
-                })
-                .where({ ID: employeeId });
-
-            return await SELECT.one
-                .from('MODEL_EMPLOYEE')
-                .where({ ID: employeeId });
-
+            else {
+                return {
+                    StatusCode: 200,
+                    Response: 'No Records Are Existing'
+                }
+            }
 
         } catch (error) {
             console.log(error.message)
@@ -192,7 +314,6 @@ LEFT JOIN "MODEL_DEPARTMENTS" D
             return req.error(500, 'Failed to compute employee counts by department');
         }
     });
-
     srv.on('READ', 'LeaveRequestsByMonth', async (req) => {
         try {
             const leaves = await cds.run('SELECT "FROMDATE" FROM MODEL_LEAVEREQUESTS')
@@ -210,7 +331,6 @@ LEFT JOIN "MODEL_DEPARTMENTS" D
             return req.error(500, 'Failed to compute leave requests by month');
         }
     });
-
     srv.on('READ', 'DepartmentAttrition', async (req) => {
         try {
             const employees = await cds.run(`SELECT
@@ -237,8 +357,7 @@ LEFT JOIN "MODEL_DEPARTMENTS" D
             return req.error(500, 'Failed to compute department attrition');
         }
     });
-
-    srv.on('getDataByParam',async(req)=>{
+    srv.on('getDataByParam', async (req) => {
         try {
             let payload = req.data;
 
@@ -246,29 +365,28 @@ LEFT JOIN "MODEL_DEPARTMENTS" D
 
             if (payload.TableName = 'Employees') {
 
-                 getRecords = await cds.run(`select * from MODEL_EMPLOYEES1 limit ${payload.Limit};`)
-                
+                getRecords = await cds.run(`select * from MODEL_EMPLOYEES1 limit ${payload.Limit};`)
+
             }
             if (payload.TableName = 'Leaves') {
 
-                 getRecords = await cds.run(`select * from MODEL_LEAVEREQUESTS limit ${payload.Limit};`)
-                
+                getRecords = await cds.run(`select * from MODEL_LEAVEREQUESTS limit ${payload.Limit};`)
+
             }
             if (payload.TableName = 'Products') {
 
-                 getRecords = await cds.run(`select * from MODEL_PRODUCT limit ${payload.Limit};`)
-                
+                getRecords = await cds.run(`select * from MODEL_PRODUCT limit ${payload.Limit};`)
+
             }
 
             return {
-                Records : getRecords
+                Records: getRecords
             }
 
         } catch (error) {
             console.log(error.message)
         }
     })
-
     srv.on('READ', 'EmployeeSalaryTenure', async (req) => {
         try {
             const employees = await cds.run(`SELECT 
@@ -289,7 +407,6 @@ FROM MODEL_EMPLOYEES`);
             return req.error(500, 'Failed to compute employee salary/tenure');
         }
     });
-
     srv.on('READ', 'LeaveTypeByDepartment', async (req) => {
         try {
             const leaves = await cds.run(`SELECT
