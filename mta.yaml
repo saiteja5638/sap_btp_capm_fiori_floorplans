@@ -8,6 +8,7 @@ modules:
   path: gen/srv
   requires:
   - name: sample2-db
+  - name: sample2-auth
   provides:
   - name: srv-api
     properties:
@@ -22,6 +23,8 @@ modules:
   path: gen/db
   requires:
   - name: sample2-db
+    properties:
+      TARGET_CONTAINER: ~{hdi-container-name}
   parameters:
     buildpack: nodejs_buildpack
 - name: sample2-app-content
@@ -35,54 +38,12 @@ modules:
     build-result: resources
     requires:
     - artifacts:
-      - employeeoverview.zip
-      name: employeeoverview
-      target-path: resources/
-    - artifacts:
       - employeelistreport.zip
       name: employeelistreport
       target-path: resources/
-    - artifacts:
-      - employeeoverviewpage.zip
-      name: employeeoverviewpage
-      target-path: resources/
-    - artifacts:
-      - project1.zip
-      name: project1
-      target-path: resources/
-- name: employeeoverview
-  type: html5
-  path: app/employee_overview
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
 - name: employeelistreport
   type: html5
   path: app/employee_listreport
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: employeeoverviewpage
-  type: html5
-  path: app/employee_overviewpage
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: project1
-  type: html5
-  path: app/project1
   build-parameters:
     build-result: dist
     builder: custom
@@ -96,6 +57,8 @@ resources:
   parameters:
     service: hana
     service-plan: hdi-shared
+  properties:
+    hdi-container-name: ${service-name}
 - name: sample2-repo-host
   type: org.cloudfoundry.managed-service
   parameters:
@@ -120,6 +83,19 @@ resources:
     service: destination
     service-name: sample2-destination-service
     service-plan: lite
+- name: sample2-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      oauth2-configuration:
+        credential-types:
+        - binding-secret
+        - x509
+      tenant-mode: dedicated
+      xsappname: sample2-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
