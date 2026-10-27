@@ -20,6 +20,82 @@ context model {
                            on orders.Customer = $self.KID;
     }
 
+
+    entity Categories : cuid, managed {
+        name        : String(100) not null;
+        description : String(500);
+        products    : Association to many Products
+                          on products.category = $self;
+    }
+
+    entity Suppliers : cuid, managed {
+        name     : String(150) not null;
+        email    : String(255);
+        products : Association to many Products
+                       on products.supplier = $self;
+    }
+
+    entity Products : cuid, managed {
+        productCode : String(40) not null;
+        name        : String(150) not null;
+        description : String(500);
+        category    : Association to Categories not null;
+        supplier    : Association to Suppliers not null;
+        active      : Boolean default true;
+    }
+
+    annotate Products with {
+        productCode @assert.unique;
+    };
+
+    entity Jobs : cuid, managed {
+
+        jobName        : String(100);
+        description    : String(500);
+
+        endpoint       : String(500);
+
+        httpMethod     : String(10) default 'POST';
+
+        scheduleType   : String(30);
+        schedule       : String(100);
+
+        active         : Boolean default true;
+
+        schedulerJobId : String(200);
+
+        lastRunAt      : Timestamp;
+        nextRunAt      : Timestamp;
+
+        status         : String(30);
+
+        executions     : Composition of many JobExecutions
+                             on executions.job = $self;
+    }
+
+
+    entity JobExecutions : cuid, managed {
+
+        job            : Association to Jobs;
+
+        schedulerJobId : String(200);
+
+        executionId    : String(200);
+
+        status         : String(30);
+
+        startedAt      : Timestamp;
+
+        finishedAt     : Timestamp;
+
+        responseCode   : Integer;
+
+        responseBody   : LargeString;
+
+        errorMessage   : LargeString;
+    }
+
+
     entity PurchaseOrders {
         key PID      : UUID;
             PNUMBER  : Integer;
